@@ -1,0 +1,5 @@
+https://dev.to/cyberwolve/how-to-verify-user-email-in-node-express-eaj
+https://dev.to/cyberwolve/how-to-implement-password-reset-via-email-in-node-js-132m
+https://www.abstractapi.com/guides/node-email-validation
+
+https://itnext.io/password-reset-emails-in-your-react-app-made-easy-with-nodemailer-bb27968310d7
