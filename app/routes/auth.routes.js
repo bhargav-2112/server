@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const {verifySignUp} = require('../middlewares');
 const controller = require('../controllers/auth.controller');
 const db = require('../models');
@@ -5,8 +6,50 @@ const sendEmail = require('../utils/sendEmail');
 const User = db.user;
 const Token = db.token;
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
+const CLIENT_URL = 'http://localhost:8081/';
 
 module.exports = function(app) {
+  app.get('/auth/login/failed', (req, res) => {
+    res.status(401).json({
+      success: false,
+      message: 'failure',
+    });
+  });
+
+  app.get('/auth/logout', (req, res) => {
+    req.logout();
+    res.redirect();
+  });
+
+  app.get('/auth/login/success', (req, res) => {
+    if (req.user) {
+      console.log('user', req.user);
+      res.status(200).json({
+        success: true,
+        message: 'successful',
+        user: req.user,
+        cookies: req.cookies,
+      });
+    }
+  });
+
+  app.get('/auth/google', passport.authenticate('google', {scope: ['profile']}));
+
+  app.get('/auth/google/callback', passport.authenticate('google', {
+    successRedirect: CLIENT_URL,
+    successFailure: 'login/failed',
+  }));
+
+  app.get('/auth/github', passport.authenticate('github', {scope: ['user:email']}));
+
+  app.get('/auth/github/callback',
+      passport.authenticate('github', {
+        successRedirect: CLIENT_URL,
+        successFailure: 'login/failed',
+      }),
+  );
+
   app.use(function(req, res, next) {
     res.header(
         'Access-Control-Allow-Headers',

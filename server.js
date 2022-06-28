@@ -1,14 +1,32 @@
+/* eslint-disable no-unused-vars */
 const express = require('express');
 const cors = require('cors');
+const passport = require('passport');
+const passportSetup = require('./app/passport');
+const cookieSession = require('cookie-session');
 const dbConfig = require('./app/config/db.config');
 
 const app = express();
 
+app.use(
+    cookieSession({
+      name: 'session',
+      keys: ['xyz'],
+      maxAge: 24 * 60 * 60 * 1000,
+    }),
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 const corsOptions = {
   origin: 'http://localhost:8081',
+  methods: 'GET, POST, PUT, DELETE',
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
+
 
 // parse requests of content-type - application/json
 app.use(express.json());
